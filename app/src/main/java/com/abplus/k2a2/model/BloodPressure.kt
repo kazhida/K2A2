@@ -6,14 +6,14 @@ import java.util.*
 data class BloodPressure(
     val id: Long,
     val timeInMillis: Long,
-    val systolic: Int,
-    val diastolic: Int,
-    val pulse: Int = 0
+    val systolicBP: Int,
+    val diastolicBP: Int,
+    val pulseRate: Int = 0
 ) {
 
     companion object {
 
-        fun newInstance(
+        fun create(
             dateTime: Long,
             systolic: Int,
             diastolic: Int,
@@ -32,9 +32,9 @@ data class BloodPressure(
     val time: String get() = timeFormatter.format(calendar.time)
 
     interface Repository {
-        fun add(bp: BloodPressure)
-        fun save(bp: BloodPressure)
-        fun delete(bp: BloodPressure)
-        fun load(): List<BloodPressure>
+        suspend fun add(bp: BloodPressure)
+        suspend fun save(bp: BloodPressure)
+        suspend fun delete(bp: BloodPressure)
+        suspend fun load(): List<BloodPressure>
     }
 }
