@@ -36,5 +36,6 @@ data class BloodPressure(
         suspend fun save(bp: BloodPressure)
         suspend fun delete(bp: BloodPressure)
         suspend fun load(): List<BloodPressure>
+        suspend fun latest(): BloodPressure
     }
 }

@@ -3,7 +3,9 @@ package com.abplus.k2a2.di
 import com.abplus.k2a2.model.BloodPressure
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
+import io.realm.kotlin.query.RealmQuery
 import io.realm.kotlin.query.Sort
+import io.realm.kotlin.query.find
 import io.realm.kotlin.types.RealmObject
 import io.realm.kotlin.types.annotations.PrimaryKey
 
@@ -16,7 +18,13 @@ open class RealmBloodPressure(
     var pulseRate: Int = 0
 ): RealmObject {
 
-    fun toModel(): BloodPressure = BloodPressure(id, timeInMillis, systolicBP, diastolicBP, pulseRate)
+    fun toModel(): BloodPressure = BloodPressure(
+        id,
+        timeInMillis,
+        systolicBP,
+        diastolicBP,
+        pulseRate
+    )
 
     class Repository() : BloodPressure.Repository {
 
@@ -61,12 +69,23 @@ open class RealmBloodPressure(
             TODO("Not yet implemented")
         }
 
-        override suspend fun load(): List<BloodPressure> = realm.let { realm ->
-            realm.query(RealmBloodPressure::class).sort("timeInMillis", Sort.DESCENDING).find().map {
-                it.toModel()
-            }.also {
-                realm.close()
-            }
+        private val query: RealmQuery<RealmBloodPressure> get() =
+            realm.query(RealmBloodPressure::class).sort("timeInMillis", Sort.DESCENDING)
+
+        override suspend fun load(): List<BloodPressure> = query.find().map {
+            it.toModel()
+        }.also {
+            realm.close()
         }
+
+        override suspend fun latest(): BloodPressure = query.first().find {
+            it?.toModel()
+        } ?: BloodPressure(
+            0,
+            System.currentTimeMillis(),
+            130,
+            80,
+            60
+        )
     }
 }
