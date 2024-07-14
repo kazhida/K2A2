@@ -5,6 +5,7 @@ import com.abplus.k2a2.model.BloodPressure
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
+import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -27,18 +28,32 @@ class RealmBloodPressureTest {
     @Before
     fun init() {
         RealmConfiguration.Builder(schema = setOf(RealmBloodPressure::class)).build().let {
-            Realm.open(it).writeBlocking {
-                deleteAll()
-                seed.forEach {
-                    copyToRealm(it)
+            Realm.open(it).apply {
+                writeBlocking {
+                    deleteAll()
+                    seed.forEach {
+                        copyToRealm(it)
+                    }
                 }
-            }
+            }.close()
         }
     }
 
+    @After
+    fun clean() {
+        RealmConfiguration.Builder(schema = setOf(RealmBloodPressure::class)).build().let {
+            Realm.open(it).apply {
+                writeBlocking {
+                    deleteAll()
+                }
+            }.close()
+        }
+    }
+
+    private val repository get() = RealmBloodPressureModule.provideBloodPressureRepository()
+
     @Test
     fun `5個のデータを読み込んで降順に並んでいることを確認`() {
-        val repository = RealmBloodPressureModule.provideBloodPressureRepository()
         val records = repository.load()
         Assert.assertEquals(5, records.size)
         val sorted = records.sortedByDescending { it.id }
@@ -47,7 +62,6 @@ class RealmBloodPressureTest {
 
     @Test
     fun `1個のデータを追加したらデータが6個になっている`() {
-        val repository = RealmBloodPressureModule.provideBloodPressureRepository()
         BloodPressure.create(System.currentTimeMillis(), 100, 80, 60).let {
             repository.add(it)
         }
@@ -55,9 +69,9 @@ class RealmBloodPressureTest {
         Assert.assertEquals(6, records.size)
     }
 
+
     @Test
     fun `最新のデータを読み込む`() {
-        val repository = RealmBloodPressureModule.provideBloodPressureRepository()
         val record = repository.latest()
         Assert.assertEquals(164, record.systolicBP)
         Assert.assertEquals(104, record.diastolicBP)
@@ -66,8 +80,6 @@ class RealmBloodPressureTest {
 
     @Test
     fun `最新のデータを変更する`() {
-        val repository = RealmBloodPressureModule.provideBloodPressureRepository()
-
         val source = repository.latest()
         source.copy(systolicBP = 169, diastolicBP = 109, pulseRate = 69).let {
             repository.save(it)
@@ -81,7 +93,6 @@ class RealmBloodPressureTest {
 
     @Test
     fun `3番目のデータを削除したらデータが4つになる`() {
-        val repository = RealmBloodPressureModule.provideBloodPressureRepository()
         val records = repository.load()
         repository.delete(records[2])
         Assert.assertEquals(4, repository.load().size)
