@@ -1,6 +1,7 @@
 package com.abplus.k2a2.di
 
 import com.abplus.k2a2.model.BloodPressure
+import com.abplus.k2a2.model.BloodPressureRepository
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import io.realm.kotlin.query.RealmQuery
@@ -11,12 +12,14 @@ import io.realm.kotlin.types.annotations.PrimaryKey
 
 open class RealmBloodPressure(
     @PrimaryKey
-    var id: Long = 0,
-    var timeInMillis: Long = 0,
-    var systolicBP: Int = 0,
-    var diastolicBP: Int = 0,
-    var pulseRate: Int = 0
+    var id: Long,
+    var timeInMillis: Long,
+    var systolicBP: Int,
+    var diastolicBP: Int,
+    var pulseRate: Int
 ): RealmObject {
+
+    constructor() : this(0,0,0,0,0)
 
     fun toModel(): BloodPressure = BloodPressure(
         id,
@@ -26,16 +29,16 @@ open class RealmBloodPressure(
         pulseRate
     )
 
-    class Repository() : BloodPressure.Repository {
+    class Repository() : BloodPressureRepository {
 
         private val realm: Realm get() = RealmConfiguration.Builder(schema = setOf(RealmBloodPressure::class)).build().let {
             Realm.open(it)
         }
 
-        override suspend fun add(bp: BloodPressure) {
+        override fun add(bp: BloodPressure) {
             realm.apply {
-                write {
-                    val maxId = query(RealmBloodPressure::class).max("id", RealmBloodPressure::class).find()?.id ?: 0
+                writeBlocking {
+                    val maxId = query(RealmBloodPressure::class).sort("id", Sort.DESCENDING).first().find()?.id ?: 0
                     RealmBloodPressure(
                         id = maxId + 1,
                         timeInMillis = bp.timeInMillis,
@@ -49,36 +52,40 @@ open class RealmBloodPressure(
             }.close()
         }
 
-        override suspend fun save(bp: BloodPressure) {
+        override fun save(bp: BloodPressure) {
             realm.apply {
-                write {
-                    RealmBloodPressure(
-                        id = bp.id,
-                        timeInMillis = bp.timeInMillis,
-                        systolicBP = bp.systolicBP,
-                        diastolicBP = bp.diastolicBP,
+                writeBlocking {
+                    val record = query(RealmBloodPressure::class, "id = $0", bp.id).find().first()
+                    record.apply {
+                        timeInMillis = bp.timeInMillis
+                        systolicBP = bp.systolicBP
+                        diastolicBP = bp.diastolicBP
                         pulseRate = bp.pulseRate
-                    ).let {
-                        copyToRealm(it)
                     }
                 }
             }.close()
         }
 
-        override suspend fun delete(bp: BloodPressure) {
-            TODO("Not yet implemented")
+        override fun delete(bp: BloodPressure) {
+            realm.apply {
+                writeBlocking {
+                    query(RealmBloodPressure::class, "id = $0", bp.id).find().first().let {
+                        delete(it)
+                    }
+                }
+            }.close()
         }
 
         private val query: RealmQuery<RealmBloodPressure> get() =
-            realm.query(RealmBloodPressure::class).sort("timeInMillis", Sort.DESCENDING)
+            realm.query(RealmBloodPressure::class).sort("id", Sort.DESCENDING)
 
-        override suspend fun load(): List<BloodPressure> = query.find().map {
+        override fun load(): List<BloodPressure> = query.find().map {
             it.toModel()
         }.also {
             realm.close()
         }
 
-        override suspend fun latest(): BloodPressure = query.first().find {
+        override fun latest(): BloodPressure = query.first().find {
             it?.toModel()
         } ?: BloodPressure(
             0,

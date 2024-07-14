@@ -1,14 +1,8 @@
 package com.abplus.k2a2
 
 import android.app.Application
-import io.realm.kotlin.Realm
+import dagger.hilt.android.HiltAndroidApp
 
-
+@HiltAndroidApp
 class K2A2Application : Application() {
-
-    override fun onCreate() {
-        super.onCreate()
-
-
-    }
 }
