@@ -1,6 +1,5 @@
 package com.abplus.k2a2.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
