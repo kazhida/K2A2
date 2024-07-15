@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
                     systolicBP = 160,
                     diastolicBP = 100,
                     pulseRate = 90,
-                    textStyle = TextStyle(fontSize = 18.sp)
+                    textStyle = TextStyle(fontSize = 24.sp)
                 )
             }
         }

@@ -30,11 +30,10 @@ fun BloodPressurePicker(
     var v2: Int by remember { mutableIntStateOf(pulseRate) }
 
     Row(
-        modifier = modifier
-            .background(MaterialTheme.colorScheme.secondaryContainer)
-            .clip(Shapes().medium)
+        modifier = modifier.clip(Shapes().medium)
     ) {
         val pickerModifier = Modifier.padding(4.dp)
+        val dividerFontStyle = textStyle.copy(fontSize = textStyle.fontSize * 2 / 3)
         // 最高血圧
         NumberPicker(
             modifier = pickerModifier,
@@ -45,8 +44,9 @@ fun BloodPressurePicker(
             onValueChange = { v0 = it }
         )
         Text(
-            text = "",
-            style = textStyle
+            text = " / ",
+            modifier = Modifier.align(alignment = Alignment.CenterVertically),
+            style = dividerFontStyle
         )
         //  最低血圧
         NumberPicker(
@@ -60,7 +60,7 @@ fun BloodPressurePicker(
         Text(
             text = "mmHg ",
             modifier = Modifier.align(alignment = Alignment.CenterVertically),
-            style = textStyle
+            style = dividerFontStyle
         )
         NumberPicker(
             modifier = pickerModifier,
@@ -73,7 +73,7 @@ fun BloodPressurePicker(
         Text(
             text = "pulse/min",
             modifier = Modifier.align(alignment = Alignment.CenterVertically),
-            style = textStyle
+            style = dividerFontStyle
         )
     }
 }
