@@ -22,7 +22,8 @@ fun BloodPressurePicker(
     textStyle: TextStyle = LocalTextStyle.current,
     systolicBP: Int = 160,
     diastolicBP: Int = 100,
-    pulseRate: Int = 90
+    pulseRate: Int = 90,
+    onChange: (systolicBP: Int, diastolicBP: Int, pulseRate: Int) -> Unit
 ) {
     var v0: Int by remember { mutableIntStateOf(systolicBP) }
     var v1: Int by remember { mutableIntStateOf(diastolicBP) }
@@ -40,7 +41,10 @@ fun BloodPressurePicker(
             range = 0..200,
             textStyle = textStyle,
             dividersColor = dividersColor,
-            onValueChange = { v0 = it }
+            onValueChange = {
+                v0 = it
+                onChange(v0, v1, v2)
+            }
         )
         Text(
             text = " / ",
@@ -54,7 +58,10 @@ fun BloodPressurePicker(
             range = 0..200,
             textStyle = textStyle,
             dividersColor = dividersColor,
-            onValueChange = { v1 = it }
+            onValueChange = {
+                v1 = it
+                onChange(v0, v1, v2)
+            }
         )
         Text(
             text = "mmHg ",
@@ -67,7 +74,10 @@ fun BloodPressurePicker(
             range = 0..150,
             textStyle = textStyle,
             dividersColor = dividersColor,
-            onValueChange = { v2 = it }
+            onValueChange = {
+                v2 = it
+                onChange(v0, v1, v2)
+            }
         )
         Text(
             text = "pulse/min",
