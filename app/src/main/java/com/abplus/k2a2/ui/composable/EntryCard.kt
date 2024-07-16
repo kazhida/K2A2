@@ -94,7 +94,3 @@ fun EntryCard(
         }
     }
 }
-
-@Composable
-private fun DateTime(bloodPressure: BloodPressure) {
-}

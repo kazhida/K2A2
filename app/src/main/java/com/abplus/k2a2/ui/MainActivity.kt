@@ -1,23 +1,16 @@
 package com.abplus.k2a2.ui
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.abplus.k2a2.di.RealmBloodPressure
 import com.abplus.k2a2.model.BloodPressure
 import com.abplus.k2a2.model.BloodPressureRepository
-import com.abplus.k2a2.ui.composable.BloodPressurePicker
 import com.abplus.k2a2.ui.composable.EntryCard
 import com.abplus.k2a2.ui.theme.K2A2Theme
 import dagger.hilt.android.AndroidEntryPoint
