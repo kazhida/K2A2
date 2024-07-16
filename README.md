@@ -1,4 +1,4 @@
 # K2A2
-血圧の記録アプリ
+JetPack Composeを使ったアプリ開発の練習用、血圧記録アプリ
 
-JetPack Composeを使ったアプリ開発の練習用
+![Screenshot_20240716_154619.png](./images/Screenshot_20240716_154619.png)

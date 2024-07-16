@@ -2,6 +2,7 @@ package com.abplus.k2a2.ui.composable
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
@@ -21,7 +22,8 @@ fun BloodPressureItem(
     doItemDelete: (BloodPressure) -> Unit
 ) {
     Card(
-        modifier = modifier.padding(4.dp),
+        modifier = modifier.padding(4.dp, 1.dp),
+        shape = RoundedCornerShape(1.dp),
         elevation = CardDefaults.cardElevation(),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainer,
