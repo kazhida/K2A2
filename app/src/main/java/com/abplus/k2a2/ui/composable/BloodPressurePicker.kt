@@ -1,4 +1,4 @@
-package com.abplus.k2a2.ui
+package com.abplus.k2a2.ui.composable
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
