@@ -15,11 +15,11 @@ import com.abplus.k2a2.model.BloodPressureRepository
 @Composable
 fun EntryCard(
     bloodPressure: MutableState<BloodPressure>,
+    isVisible: MutableState<Boolean>,
     repository: BloodPressureRepository,
+    onClose: () -> Unit,
 ) {
-    var isVisible by remember { mutableStateOf(true) }
-
-    if (isVisible) {
+    if (isVisible.value) {
         Card(
             shape = RoundedCornerShape(10.dp),
             colors = CardDefaults.cardColors(),
@@ -69,7 +69,7 @@ fun EntryCard(
                     OutlinedButton(
                         modifier = Modifier.wrapContentWidth(),
                         onClick = {
-                            isVisible = false
+                            isVisible.value = false
                         }
                     ) {
                         Text(text = "cancel")
@@ -84,7 +84,8 @@ fun EntryCard(
                             } else {
                                 repository.save(bloodPressure.value)
                             }
-                            isVisible = false
+                            isVisible.value = false
+                            onClose()
                         }
                     ) {
                         Text(text = "save")
